@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NILE RUHI | Premium Clothing Brand</title>
+  <!-- FontAwesome Icons for modern UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-container">
+      <div class="logo" onclick="app.showView('catalog')">
+        NILE RUHI
+        <span>ESTD 2026</span>
+      </div>
+      
+      <nav>
+        <ul>
+          <li><a href="#" class="nav-link active" onclick="app.showView('catalog'); return false;">Home</a></li>
+          <li><a href="#" class="nav-link" onclick="app.showView('catalog'); return false;">Collection</a></li>
+          <li><a href="#" class="nav-link" onclick="app.showView('admin'); return false;"><i class="fa-solid fa-user-tie"></i> Admin Panel</a></li>
+        </ul>
+      </nav>
+      
+      <div class="header-actions">
+        <!-- Auth Status Tag -->
+        <div class="user-tag" id="header-user-tag" onclick="app.openAuthModal()">
+          <span class="status-dot"></span>
+          <span class="user-status-text" id="header-user-text">Continue as Guest</span>
+        </div>
+        
+        <!-- Cart Trigger Button -->
+        <button class="icon-btn" id="cart-trigger" onclick="app.toggleCart(true)">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-count" id="header-cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="container">
+    
+    <!-- View 1: Catalog & Shop (Home) -->
+    <section id="catalog-view" class="view-section">
+      <!-- Hero Banner -->
+      <div class="hero">
+        <div class="hero-content">
+          <p class="hero-subtitle">New Season Collection</p>
+          <h1 class="hero-title">Elegance woven into every thread.</h1>
+          <p class="hero-desc">Discover the premium linen garments, exquisite silk wear, and designer jackets designed to fit perfectly on every occasion.</p>
+          <button class="btn-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior: 'smooth'})">
+            Shop the Collection <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Catalog Header and Filters -->
+      <div class="catalog-header" id="products-section">
+        <h2 class="section-title">Our Collection</h2>
+        <div class="category-filters" id="category-filters">
+          <button class="filter-pill active" onclick="app.filterCategory('All', this)">All Clothing</button>
+          <button class="filter-pill" onclick="app.filterCategory('Men', this)">Men</button>
+          <button class="filter-pill" onclick="app.filterCategory('Women', this)">Women</button>
+          <button class="filter-pill" onclick="app.filterCategory('Indian Wear', this)">Indian Wear</button>
+        </div>
+      </div>
+      
+      <!-- Product Grid -->
+      <div class="product-grid" id="product-list">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- View 2: Shipping & Ordering Flow -->
+    <section id="checkout-view" class="view-section hidden">
+      <div class="checkout-wrapper">
+        <!-- Steps Breadcrumb -->
+        <div class="checkout-steps">
+          <div class="step-item active" id="step-indicator-address">
+            <div class="step-num">1</div>
+            <div class="step-label">Delivery Address</div>
+          </div>
+          <div class="step-item" id="step-indicator-payment">
+            <div class="step-num">2</div>
+            <div class="step-label">Payment Options</div>
+          </div>
+        </div>
+
+        <!-- Step 2A: Address Details -->
+        <div id="address-step">
+          <h2 class="section-title" style="font-size: 24px; margin-bottom: 24px;">Shipping Details</h2>
+          <form class="auth-form" id="shipping-form" onsubmit="app.submitShipping(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="ship-name" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-input" id="ship-phone" placeholder="9876543210" pattern="[0-9]{10}" required title="Please enter a valid 10-digit phone number">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="ship-email" placeholder="john@example.com" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Home Address (Line 1)</label>
+              <input type="text" class="form-input" id="ship-address1" placeholder="Flat No / House No, Street name" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Address Line 2 (Optional)</label>
+              <input type="text" class="form-input" id="ship-address2" placeholder="Locality, landmark">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" class="form-input" id="ship-city" placeholder="Mumbai" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">State</label>
+                <input type="text" class="form-input" id="ship-state" placeholder="Maharashtra" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Pincode (ZIP)</label>
+              <input type="text" class="form-input" id="ship-pincode" placeholder="400001" pattern="[0-9]{6}" required title="Please enter a valid 6-digit Indian pincode">
+            </div>
+
+            <div class="checkout-footer-actions">
+              <button type="button" class="btn-outline" onclick="app.showView('catalog')"><i class="fa-solid fa-arrow-left"></i> Back to Shop</button>
+              <button type="submit" class="btn-primary">Next <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2B: Payment Options (Redirected after Next) -->
+        <div id="payment-step" class="hidden">
+          <h2 class="section-title" style="font-size: 24px; margin-bottom: 24px;">Secure Payment</h2>
+          
+          <!-- Payment Amount Summary -->
+          <div class="payment-summary">
+            <h3 class="pay-summary-title">Order Summary</h3>
+            <div class="pay-summary-row">
+              <span class="label">Items Subtotal:</span>
+              <span class="val" id="pay-subtotal">₹0</span>
+            </div>
+            <div class="pay-summary-row">
+              <span class="label">Delivery Charges:</span>
+              <span class="val text-gold">FREE</span>
+            </div>
+            <div style="height: 1px; background-color: var(--border-color-light); margin: 12px 0;"></div>
+            <div class="pay-summary-row" style="font-weight: 700; font-size: 16px;">
+              <span>Total Payable Amount:</span>
+              <span class="text-gold" id="pay-total">₹0</span>
+            </div>
+          </div>
+
+          <h3 class="form-label" style="margin-bottom: 12px;">Select Payment Gateway Method</h3>
+          
+          <!-- Selectable Methods -->
+          <div class="pay-methods-list">
+            <div class="pay-method-option selected" onclick="app.selectPaymentMethod('upi', this)">
+              <div class="pay-method-check"></div>
+              <div class="pay-method-details">
+                <span class="pay-method-title">Razorpay UPI Checkout</span>
+                <span class="pay-method-desc">Pay instantly using Google Pay, PhonePe, Paytm, or BHIM.</span>
+              </div>
+              <div class="pay-method-icons">
+                <img src="https://img.icons8.com/color/48/google-pay.png" class="pay-icon" alt="GPay">
+                <img src="https://img.icons8.com/color/48/phonepe.png" class="pay-icon" alt="PhonePe">
+                <img src="https://img.icons8.com/color/48/paytm.png" class="pay-icon" alt="Paytm">
+              </div>
+            </div>
+            
+            <div class="pay-method-option" onclick="app.selectPaymentMethod('card', this)">
+              <div class="pay-method-check"></div>
+              <div class="pay-method-details">
+                <span class="pay-method-title">Credit / Debit / ATM Card</span>
+                <span class="pay-method-desc">All major domestic and international cards accepted.</span>
+              </div>
+              <div class="pay-method-icons">
+                <img src="https://img.icons8.com/color/48/visa.png" class="pay-icon" alt="Visa">
+                <img src="https://img.icons8.com/color/48/mastercard.png" class="pay-icon" alt="MasterCard">
+                <img src="https://img.icons8.com/color/48/rupay.png" class="pay-icon" alt="Rupay">
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-footer-actions">
+            <button type="button" class="btn-outline" onclick="app.backToAddress()"><i class="fa-solid fa-arrow-left"></i> Back to Address</button>
+            <button type="button" class="btn-primary" onclick="app.triggerRazorpayModal()">Proceed to Pay with Razorpay <i class="fa-solid fa-shield-halved"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- View 3: Order Success & WhatsApp Alert Screen -->
+    <section id="success-view" class="view-section hidden">
+      <div class="success-wrapper">
+        <div class="success-icon-container">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h1 class="success-title">Order Placed Successfully!</h1>
+        <p class="success-msg">The order has been placed, Thank you.</p>
+
+        <!-- Order Receipt details -->
+        <div class="receipt-box" id="receipt-details">
+          <!-- Injected dynamically via JS -->
+        </div>
+
+        <!-- WhatsApp Automation Preview -->
+        <div class="automation-panel">
+          <div class="auto-header">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Notifier Automation
+          </div>
+          <div class="auto-desc">
+            An automated notification has been logged to notify the owner. You can also manually trigger the message to see the prefilled format.
+          </div>
+          
+          <!-- Mock Log Display -->
+          <div class="auto-log" id="whatsapp-automation-log">
+            [System Log] Triggering WhatsApp Web Notification Hook...
+          </div>
+          
+          <div class="auto-btn-row">
+            <a href="#" id="whatsapp-redirect-btn" target="_blank" class="btn-whatsapp">
+              <i class="fa-brands fa-whatsapp"></i> Test Send to Owner
+            </a>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="app.showView('catalog')" style="width: 100%;">
+          Continue Shopping <i class="fa-solid fa-bag-shopping"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- View 4: Admin / Owner Monitoring Dashboard -->
+    <section id="admin-view" class="view-section hidden">
+      <div class="admin-header-row">
+        <div>
+          <h1 class="section-title" style="margin-bottom: 4px;">Owner Dashboard</h1>
+          <p class="admin-title-desc">Monitor live customer orders and automated payment tracking.</p>
+        </div>
+        <button class="btn-outline" onclick="app.clearMockOrders()"><i class="fa-solid fa-trash-can"></i> Clear All Orders</button>
+      </div>
+
+      <div class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Info</th>
+              <th>Shipping Address</th>
+              <th>Items Ordered</th>
+              <th>Amount (INR)</th>
+              <th>Payment Info</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="admin-orders-list">
+            <!-- Dynamic order listings injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modals & Overlay Layers -->
+
+  <!-- Modal A: Product Detail Overlay -->
+  <div class="modal-overlay" id="product-detail-modal" onclick="app.closeProductDetail(event)">
+    <div class="modal-container">
+      <button class="modal-close" onclick="app.closeProductDetail()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="product-detail-layout" id="product-detail-content">
+        <!-- dynamically injected detailed information -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal B: Sign In & Authentication Modal -->
+  <div class="modal-overlay" id="auth-modal" onclick="app.closeAuthModal(event)">
+    <div class="modal-container" style="max-width: 440px;">
+      <button class="modal-close" onclick="app.closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="auth-container">
+        <div class="auth-header">
+          <h2 class="auth-title">Welcome to NILE RUHI</h2>
+          <p class="auth-subtitle">Log in to complete your checkout purchase.</p>
+        </div>
+        
+        <!-- Authentication Method Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-login" onclick="app.switchAuthTab('login')">Google / Email</button>
+          <button class="auth-tab" id="tab-phone" onclick="app.switchAuthTab('phone')">Phone OTP</button>
+        </div>
+
+        <!-- Tab Content 1: Google & Email -->
+        <div id="auth-email-panel">
+          <form class="auth-form" onsubmit="app.handleAuthSubmit('email', event)">
+            <button type="button" class="btn-social" onclick="app.handleSocialAuth('Google')">
+              <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google Logo">
+              Continue with Google Account
+            </button>
+            
+            <div class="auth-social-divider">Or use Email Address</div>
+            
+            <div class="form-group">
+              <label class="form-label">Gmail / Email Address</label>
+              <input type="email" class="form-input" id="auth-email-input" placeholder="name@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-input" id="auth-pass-input" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-primary" style="margin-top: 10px;">Sign In & Checkout</button>
+          </form>
+        </div>
+
+        <!-- Tab Content 2: Phone Verification -->
+        <div id="auth-phone-panel" class="hidden">
+          <form class="auth-form" id="phone-auth-form" onsubmit="app.handleAuthSubmit('phone', event)">
+            <div class="form-group">
+              <label class="form-label">Mobile Number</label>
+              <div style="display: flex; gap: 8px;">
+                <span class="form-input" style="padding: 12px 8px; width: 60px; text-align: center; background-color: var(--bg-tertiary);">+91</span>
+                <input type="tel" class="form-input" id="auth-phone-input" placeholder="9876543210" pattern="[0-9]{10}" style="flex-grow: 1;" required>
+              </div>
+            </div>
+            
+            <!-- Send OTP State -->
+            <div id="phone-otp-group" class="form-group hidden">
+              <label class="form-label">Enter 6-Digit OTP</label>
+              <input type="text" class="form-input" id="auth-otp-input" placeholder="123456" pattern="[0-9]{6}">
+              <span class="auth-subtitle" style="text-align: right; color: var(--accent-gold); cursor: pointer;" onclick="app.sendOTP()">Resend OTP</span>
+            </div>
+
+            <button type="button" class="btn-primary" id="btn-otp-action" onclick="app.sendOTP()" style="margin-top: 10px;">Send One-Time Password</button>
+          </form>
+        </div>
+
+        <!-- Guest Checkout Option -->
+        <div class="auth-guest-option">
+          <a href="#" class="btn-guest-link" onclick="app.continueAsGuest(); return false;">Browse as Guest Instead</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal C: Cart Slide-out Drawer -->
+  <div class="modal-overlay" id="cart-overlay" onclick="app.toggleCart(false)" style="justify-content: flex-end; align-items: stretch; padding: 0;">
+    <div class="cart-drawer" onclick="event.stopPropagation()">
+      <div class="cart-drawer-header">
+        <h3 class="cart-drawer-title">Shopping Bag</h3>
+        <button class="cart-close-btn" onclick="app.toggleCart(false)"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Items List -->
+      <div class="cart-items-container" id="cart-items-list">
+        <!-- dynamically updated cart rows -->
+      </div>
+
+      <!-- Footer Order Placement Area -->
+      <div class="cart-drawer-footer">
+        <div class="cart-summary-row">
+          <span class="cart-summary-label">Estimated Total:</span>
+          <span class="cart-summary-value" id="cart-total-value">₹0</span>
+        </div>
+        <button class="btn-primary cart-action-btn" onclick="app.proceedToCheckout()">
+          Place Order <i class="fa-solid fa-arrow-right-long"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal D: Razorpay Secure Checkout Mock UI Overlay -->
+  <div class="razorpay-overlay" id="razorpay-overlay">
+    <div class="razorpay-modal">
+      <!-- Left side panel (secured and brand details) -->
+      <div class="rp-sidebar">
+        <div class="rp-brand-logo">
+          NILE <span>RUHI</span>
+        </div>
+        <div class="rp-order-summary">
+          <div class="rp-amount-label">Amount Payable</div>
+          <div class="rp-amount-value" id="rp-amount-display">₹0.00</div>
+        </div>
+        <div class="rp-secured-badge">
+          <i class="fa-solid fa-shield-halved"></i> Secured by Razorpay
+        </div>
+      </div>
+
+      <!-- Right side payment actions pane -->
+      <div class="rp-main" id="rp-main-content">
+        <!-- Dynamic panels (forms / loader) injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="container">
+      <div class="footer-logo">NILE RUHI</div>
+      <p style="margin-bottom: 20px; font-weight: 300; letter-spacing: 1px;">Crafting minimalist luxury fashion. Designed for comfort, tailored for class.</p>
+      
+      <div class="footer-nav">
+        <a href="#" onclick="app.showView('catalog'); return false;">Home</a>
+        <a href="#" onclick="app.showView('catalog'); return false;">Catalog</a>
+        <a href="#" onclick="app.showView('admin'); return false;">Owner Dashboard</a>
+      </div>
+
+      <p style="margin-bottom: 12px; font-size: 11px;">&copy; 2026 NILE RUHI Clothing. All rights reserved.</p>
+      <span class="admin-trigger-link" onclick="app.showView('admin')"><i class="fa-solid fa-key"></i> Owner / Merchant Dashboard Login</span>
+    </div>
+  </footer>
+
+  <!-- Code Script Files -->
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
